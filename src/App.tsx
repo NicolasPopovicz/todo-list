@@ -1,8 +1,12 @@
 import { ChangeEvent, FormEvent, ReactElement, useState } from "react";
 import { ITask } from "./interfaces";
-import ListTasks from "./components/ListTasks";
+
 import Input from "./components/Input";
 import Button from "./components/Button";
+import ListTasks from "./components/ListTasks";
+import HeadingOne from "./components/HeadingOne";
+import MainWrapper from "./components/MainWrapper";
+import Footer from "./components/Footer";
 
 export default function App(): ReactElement {
   const [task, setTask] = useState<string>("");
@@ -10,17 +14,18 @@ export default function App(): ReactElement {
 
   const handleTask = (evt: ChangeEvent<HTMLInputElement>): void => setTask(evt.target.value);
 
-  const removeTask = (taskName: string): void => setTodo(todo.filter(task => task.description !== taskName));
+  const removeTask = (taskId: number): void => setTodo(todo.filter(task => task.id !== taskId))
 
   const addTask = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
     if (task === "") {
-      alert("Insira um valor!");
+      alert("You need to insert a value!");
       return;
     }
 
     const newTask = {
+      id: +(Math.random() * 1000).toFixed(0),
       description: task,
     };
 
@@ -29,25 +34,27 @@ export default function App(): ReactElement {
   }
 
   return (
-    <main className="container mx-auto flex flex-col items-center justify-center py-10 h-full">
-      <h1 className="text-3xl uppercase font-semibold mb-5 text-teal-800">ToDo List App {todo.length !== 0 && todo.length}</h1>
+    <MainWrapper>
+      <HeadingOne>ToDo List {todo.length !== 0 ? `(${todo.length} ToDo's)` : ""}</HeadingOne>
       <section className="bg-[whitesmoke] p-4 rounded shadow-md flex flex-col items-center">
 
         <div className="mb-6 w-full">
           {todo.length === 0 && <p className="mb-2 px-4 py-2 border bg-green-200 text-green-700 shadow-sm font-semibold uppercase text-center">Wohoo, no tasks to do!</p>}
           {todo && (
-            todo.map((task: ITask, index: number) => (
-              <ListTasks key={index} task={task} removeTodo={removeTask} />
+            todo.map((task: ITask) => (
+              <ListTasks key={task.id} task={task} removeTodo={removeTask} />
             ))
           )}
         </div>
 
         <form onSubmit={addTask}>
           <Input type="text" value={task} onChange={handleTask} />
-          <Button typeButton="submit">Criar tarefa</Button>
+          <Button typeButton="submit">Create</Button>
         </form>
 
       </section>
-    </main>
+
+      <Footer />
+    </MainWrapper>
   )
 }

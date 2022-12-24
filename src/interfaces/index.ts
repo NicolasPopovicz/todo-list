@@ -1,6 +1,7 @@
-import { ChangeEventHandler } from "react";
+import { ChangeEventHandler, ReactNode } from "react";
 
 export interface ITask {
+	id: number;
 	description: string;
 }
 
@@ -13,4 +14,12 @@ export interface InputInterface {
 export interface IButton {
 	children: string;
 	typeButton: "button" | "submit" | "reset";
+}
+
+export interface IHeadingOne {
+	children: string[];
+}
+
+export interface IMainWrapper {
+	children: ReactNode;
 }
